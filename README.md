@@ -13,3 +13,5 @@ Submenu de impressão - permitindo a reinicialização do spooler;
 Exclusão de perfis com uma ferramenta avançada e otimizada, utilizando WMIC;
 
 E o GPUpdate para atualizar as políticas de grupo.
+
+Além das funcionalidades listadas, a versão em PowerShell serve como uma alternativa modernizada, especialmente para sistemas onde o WMIC foi descontinuado.
