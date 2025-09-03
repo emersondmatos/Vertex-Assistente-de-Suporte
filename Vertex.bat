@@ -21,7 +21,7 @@ ECHO  Recomenda-se executar como Administrador.
 ECHO.
 ECHO  Selecione uma opcao para continuar:
 ECHO.
-ECHO    [1] Menu de otimizacao
+ECHO    [1] SubMenu de otimizacao
 ECHO    [2] SubMenu Prefetch/Superfetch
 ECHO    [3] SubMenu de Impressao
 ECHO    [4] Exclusao de Perfis de Usuarios
