@@ -1,13 +1,13 @@
 @ECHO OFF
 :: por Emerson Toneti
-:: 1.2 21/08/2025
 TITLE Assistente de Suporte
-COLOR 0B
 CHCP 65001 > NUL
+setlocal enabledelayedexpansion
 
 :MENU
+COLOR 0B
 CLS
-ECHO.⠀⠀
+ECHO.
 ECHO  █████   █████ ██████████ ███████████   ███████████ ██████████ █████ █████
 ECHO ░░███   ░░███ ░░███░░░░░█░░███░░░░░███ ░█░░░███░░░█░░███░░░░░█░░███ ░░███ 
 ECHO  ░███    ░███  ░███  █ ░  ░███    ░███ ░   ░███  ░  ░███  █ ░  ░░███ ███  
@@ -23,8 +23,8 @@ ECHO  Selecione uma opcao para continuar:
 ECHO.
 ECHO    [1] Menu de otimizacao
 ECHO    [2] GPupdate
-ECHO    [3] Menu Prefetch/Superfetch
-ECHO    [4] Problemas de impressao
+ECHO    [3] SubMenu Prefetch/Superfetch
+ECHO    [4] SubMenu de Impressao
 ECHO    [5] Limpa Perfil
 ECHO.
 ECHO    [6] Sair
@@ -63,10 +63,85 @@ GOTO MENU
 :Op6
 GOTO SAIR
 
-@echo off
+:LimpaPerfil
+COLOR 0C
 CLS
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    CLS
+    echo.
+    echo Este script precisa ser executado com privilegios de Administrador.
+    echo.
+    echo Pressione qualquer tecla para sair.
+    pause >nul
+    exit
+)
+
+echo.
+echo ==========================================================
+echo        Ferramenta de Exclusao de Perfis de Usuario
+echo ==========================================================
+echo.
+echo Para sair, simplesmente pressione Enter sem digitar nada.
+echo.
+
+set "userlist="
+set /p userlist="Digite os nomes dos usuarios a serem removidos (separados por espaco): "
+
+if not defined userlist (
+    echo Saindo.
+    goto :EOF
+)
+
+CLS
+echo.
+echo ----------------------------------------------------------
+echo Iniciando processo para os usuarios: %userlist%
+echo ----------------------------------------------------------
+echo.
+
+for %%u in (%userlist%) do (
+    set "username=%%u"
+    echo Processando usuario: !username!
+
+    wmic useraccount where name="!username!" get sid >nul 2>&1
+    if !errorlevel! neq 0 (
+        echo   [AVISO] Usuario "!username!" nao encontrado no sistema. Pulando.
+    ) else (
+        set "USERID="
+        for /f "tokens=*" %%s in ('wmic useraccount where name="!username!" get sid ^| find "S-1-"') do (
+            set "USERID=%%s"
+        )
+        for /l %%a in (1,1,10) do if "!USERID:~-1!"==" " set USERID=!USERID:~0,-1!
+
+        echo   - SID encontrado: !USERID!
+        
+        echo   - Removendo diretorio do perfil C:\Users\!username!.
+        wmic path win32_userprofile where "LocalPath like 'C:\\Users\\!username!'" delete >nul 2>&1
+        
+        if defined USERID (
+            echo   - Removendo chaves do Registro.
+            REG DELETE "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!USERID!" /f >nul 2>&1
+            REG DELETE "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!USERID!.bak" /f >nul 2>&1
+        )
+        
+        echo   - Removendo a conta de usuario local "!username!".
+        net user !username! /delete >nul 2>&1
+        
+        echo   [SUCESSO] Perfil do usuario "!username!" foi removido.
+    )
+    echo.
+)
+
+echo ----------------------------------------------------------
+echo Processo finalizado.
+echo.
+echo Pressione qualquer tecla para voltar ao menu principal.
+pause >nul
+goto :EOF
 
 :SubmenuOti
+COLOR 0B
 CLS
 ECHO.
 ECHO ===========================================================================
@@ -79,16 +154,19 @@ ECHO    [3] Otimizacao de Rede
 ECHO    [4] Limpeza de disco
 ECHO    [5] Plano de energia "Desempenho Maximo"
 ECHO    [6] Selecionar plano de Desempenho
-ECHO    [7] Executar TODAS as otimizacoes em sequencia
 ECHO.
-ECHO    [8] Voltar ao menu principal
+ECHO    [7] Executar TODAS as otimizacoes em sequencia (Com reparo de sistema)
+ECHO    [8] Executar TODAS as otimizacoes em sequencia (Sem reparo de sistema)
+ECHO.
+ECHO    [9] Voltar ao menu principal
 ECHO.
 ECHO ===========================================================================
 ECHO.
-CHOICE /C 12345678 /N 
+CHOICE /C 123456789 /N 
 
-IF ERRORLEVEL 8 GOTO :MENU
-IF ERRORLEVEL 7 GOTO :TODAS
+IF ERRORLEVEL 9 GOTO :MENU
+IF ERRORLEVEL 8 GOTO :TODAS
+IF ERRORLEVEL 7 GOTO :TODASR
 IF ERRORLEVEL 6 GOTO :DESEMPENHO
 IF ERRORLEVEL 5 GOTO :ENERGIA
 IF ERRORLEVEL 4 GOTO :LIMPDISCO
@@ -115,55 +193,8 @@ cleanmgr /d C:
 PAUSE
 GOTO :SubmenuOti
 
-:LimpaPerfil
-:: Script do limpa perfil criado originalmente por Marcelo Esteves
-CLS
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    CLS
-    echo.
-    echo Voce precisa executar este script como Administrador.
-    echo.
-    echo Pressione qualquer tecla para voltar ao menu...
-    pause >nul
-	GOTO :MENU
-)
-
-setlocal enabledelayedexpansion
-
-set "username="
-set /p username="Digite o nome do usuario: "
-
-if not defined username (
-    echo.
-    echo Nao encontrado, voltando ao menu.
-    echo.
-    pause
-    GOTO :EOF
-)
-
-CD C:\USERS
-wmic path win32_userprofile where LocalPath="c:\\Users\\%username%" delete
-wmic useraccount where name="%username%" get sid | find "S-1-" >0 && set /p USERID=<0
-IF ERRORLEVEL 1 GOTO FOLDER
-ECHO %USERID%
-for /l %%a in (1,1,10) do if "!userid:~-1!"==" " set userid=!userid:~0,-1!
-REG DELETE "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!userid!" /f
-REG DELETE "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\!userid!.bak" /f
-REG DELETE "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy\!userid!" /f
-REG DELETE "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy\State\!userid!" /f
-REG DELETE "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Group Policy\Status\!userid!" /f
-REG DELETE "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Group Policy\State\!userid!" /f
-REG DELETE "HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Group Policy\Status\!userid!" /f
-PAUSE
-GOTO :MENU
-
-:FOLDER
-rmdir /s /q %username%
-PAUSE
-GOTO :MENU
-
 :SubMenuPS
+COLOR 0B
 CLS
 ECHO.
 ECHO ===========================================================================
@@ -185,49 +216,23 @@ IF ERRORLEVEL 2 GOTO HABILITAR
 IF ERRORLEVEL 1 GOTO DESABILITAR
 
 :SubMenuImp
+COLOR 0B
 CLS
 ECHO.
 ECHO ===========================================================================
-ECHO                      PROBLEMAS COMUNS DE IMPRESSAO
+ECHO                          SUBMENU DE IMPRESSAO
 ECHO ===========================================================================
 ECHO.
 ECHO   [1] Reiniciar o spooler de impressao
-ECHO   [2] Corrigir erro 0x00000709
-ECHO   [3] Corrigir erro 0x00000bcb
-ECHO   [4] Corrigir erro 0x0000011b
 ECHO.
-ECHO   [5] Voltar ao menu principal
+ECHO   [2] Voltar ao menu principal
 ECHO.
 ECHO ===========================================================================
 ECHO.
 
-CHOICE /C 12345 /N 
-IF ERRORLEVEL 5 GOTO MENU
-IF ERRORLEVEL 4 GOTO erro11gb
-IF ERRORLEVEL 3 GOTO erro0bcb
-IF ERRORLEVEL 2 GOTO erro709
-IF ERRORLEVEL 1 GOTO spooler
-
-:ERRO11b
-CLS
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Print" /v RpcAuthnLevelPrivacyEnabled /t REG_DWORD /d 0 /f
-echo Erro 0x0000011b corrigido.
-pause
-GOTO SubMenuImp
-
-:ERRO0bcb
-CLS
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Printers\PointAndPrint" /v RestrictDriverInstallationToAdministrators /t REG_DWORD /d 0 /f
-echo Erro 0x00000bcb corrigido.
-pause
-GOTO SubMenuImp
-
-:ERRO709
-CLS
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Printers\RPC" /v RpcUseNamedPipeProtocol /t REG_DWORD /d 1 /f
-echo Erro 0x00000709 corrigido.
-pause
-GOTO SubMenuImp
+CHOICE /C 12 /N 
+IF ERRORLEVEL 2 GOTO MENU
+IF ERRORLEVEL 1 GOTO SPOOLER
 
 :SPOOLER
 CLS
@@ -374,7 +379,7 @@ GOTO :SubmenuOti
 
 :GPUPDATE
 CLS
-ECHO Atualizando as politicas de grupo
+ECHO Atualizando as politicas de grupo.
 ECHO.
 gpupdate /force
 ECHO.
@@ -383,7 +388,7 @@ ECHO.
 PAUSE
 GOTO :EOF
 
-:TODAS
+:TODASR
 CLS
 ECHO Iniciando a otimizacao completa.
 ECHO Este processo pode demorar. 
@@ -402,8 +407,26 @@ ECHO.
 PAUSE
 GOTO :SubmenuOti
 
+:TODAS
+CLS
+ECHO Iniciando a otimizacao completa.
+ECHO Este processo pode demorar. 
+PAUSE
+CALL :LIMPEZA
+CALL :DESABILITARFAST
+CALL :REDE
+CALL :LIMPDISCO
+CALL :DESEMPENHO
+CALL :ENERGIA
+ECHO.
+ECHO Otimizacao concluida!
+ECHO Reinicie seu computador para finalizar todas as alteracoes.
+ECHO.
+PAUSE
+GOTO :SubmenuOti
+
 :SAIR
 CLS
 ECHO.
-TIMEOUT /T 3 /NOBREAK >NUL
+TIMEOUT /T 1 /NOBREAK >NUL
 EXIT
