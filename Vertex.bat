@@ -22,10 +22,10 @@ ECHO.
 ECHO  Selecione uma opcao para continuar:
 ECHO.
 ECHO    [1] Menu de otimizacao
-ECHO    [2] GPupdate
-ECHO    [3] SubMenu Prefetch/Superfetch
-ECHO    [4] SubMenu de Impressao
-ECHO    [5] Limpa Perfil
+ECHO    [2] SubMenu Prefetch/Superfetch
+ECHO    [3] SubMenu de Impressao
+ECHO    [4] Exclusao de Perfis de Usuarios
+ECHO    [5] GPupdate
 ECHO.
 ECHO    [6] Sair
 ECHO ============================================================================
@@ -45,19 +45,19 @@ CALL :SubmenuOti
 GOTO MENU
 
 :Op2
-CALL :GPUPDATE
-GOTO MENU
-
-:Op3
 CALL :SubMenuPS
 GOTO MENU
 
-:Op4
+:Op3
 CALL :SubMenuImp
 GOTO MENU
 
-:Op5
+:Op4
 CALL:LimpaPerfil
+GOTO MENU
+
+:Op5
+CALL :GPUPDATE
 GOTO MENU
 
 :Op6
