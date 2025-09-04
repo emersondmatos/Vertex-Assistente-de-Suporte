@@ -21,18 +21,20 @@ ECHO  Recomenda-se executar como Administrador.
 ECHO.
 ECHO  Selecione uma opcao para continuar:
 ECHO.
-ECHO    [1] SubMenu de otimizacao
-ECHO    [2] SubMenu Prefetch/Superfetch
-ECHO    [3] SubMenu de Impressao
-ECHO    [4] Exclusao de Perfis de Usuarios
-ECHO    [5] GPupdate
+ECHO    [1] SubMenu de Otimizacao
+ECHO    [2] SubMenu de Rede
+ECHO    [3] SubMenu Prefetch/Superfetch
+ECHO    [4] SubMenu de Impressao
+ECHO    [5] Exclusao de Perfis de Usuarios
+ECHO    [6] GPupdate
 ECHO.
-ECHO    [6] Sair
+ECHO    [7] Sair
 ECHO ============================================================================
 ECHO.
 
-CHOICE /C 123456 /N 
+CHOICE /C 1234567 /N 
 
+IF ERRORLEVEL 7 GOTO Op7
 IF ERRORLEVEL 6 GOTO Op6
 IF ERRORLEVEL 5 GOTO Op5
 IF ERRORLEVEL 4 GOTO Op4
@@ -45,22 +47,26 @@ CALL :SubmenuOti
 GOTO MENU
 
 :Op2
-CALL :SubMenuPS
+CALL :SubmenuRede
 GOTO MENU
 
 :Op3
-CALL :SubMenuImp
+CALL :SubMenuPS
 GOTO MENU
 
 :Op4
-CALL:LimpaPerfil
+CALL :SubMenuImp
 GOTO MENU
 
 :Op5
-CALL :GPUPDATE
+CALL:LimpaPerfil
 GOTO MENU
 
 :Op6
+CALL :GPUPDATE
+GOTO MENU
+
+:Op7
 GOTO SAIR
 
 :LimpaPerfil
@@ -79,7 +85,7 @@ if %errorlevel% neq 0 (
 
 echo.
 echo ==========================================================
-echo        Ferramenta de Exclusao de Perfis de Usuario
+echo        FERRAMENTA DE EXCLUSAO DE PERFIS DE USUARIO
 echo ==========================================================
 echo.
 echo Para sair, simplesmente pressione Enter sem digitar nada.
@@ -145,32 +151,30 @@ COLOR 0B
 CLS
 ECHO.
 ECHO ===========================================================================
-ECHO                            MENU DE OTIMIZACAO
+ECHO                         SUBMENU DE OTIMIZACAO
 ECHO ===========================================================================
 ECHO.
 ECHO    [1] Limpeza de Arquivos Temporarios e Cache
 ECHO    [2] Verificacao e Reparo de Arquivos do Sistema
-ECHO    [3] Otimizacao de Rede
-ECHO    [4] Limpeza de disco
-ECHO    [5] Plano de energia "Desempenho Maximo"
-ECHO    [6] Selecionar plano de Desempenho
+ECHO    [3] Limpeza de disco
+ECHO    [4] Plano de energia "Desempenho Maximo"
+ECHO    [5] Selecionar plano de Desempenho
 ECHO.
-ECHO    [7] Executar TODAS as otimizacoes em sequencia (Com reparo de sistema)
-ECHO    [8] Executar TODAS as otimizacoes em sequencia (Sem reparo de sistema)
+ECHO    [6] Executar TODAS as otimizacoes em sequencia (Com reparo de sistema)
+ECHO    [7] Executar TODAS as otimizacoes em sequencia (Sem reparo de sistema)
 ECHO.
-ECHO    [9] Voltar ao menu principal
+ECHO    [8] Voltar ao menu principal
 ECHO.
 ECHO ===========================================================================
 ECHO.
-CHOICE /C 123456789 /N 
+CHOICE /C 12345678 /N 
 
-IF ERRORLEVEL 9 GOTO :MENU
-IF ERRORLEVEL 8 GOTO :TODAS
-IF ERRORLEVEL 7 GOTO :TODASR
-IF ERRORLEVEL 6 GOTO :DESEMPENHO
-IF ERRORLEVEL 5 GOTO :ENERGIA
-IF ERRORLEVEL 4 GOTO :LIMPDISCO
-IF ERRORLEVEL 3 GOTO :REDE
+IF ERRORLEVEL 8 GOTO :MENU
+IF ERRORLEVEL 7 GOTO :TODAS
+IF ERRORLEVEL 6 GOTO :TODASR
+IF ERRORLEVEL 5 GOTO :DESEMPENHO
+IF ERRORLEVEL 4 GOTO :ENERGIA
+IF ERRORLEVEL 3 GOTO :LIMPDISCO
 IF ERRORLEVEL 2 GOTO :SISTEMA
 IF ERRORLEVEL 1 GOTO :LIMPEZA
 
@@ -192,6 +196,94 @@ CLS
 cleanmgr /d C:
 PAUSE
 GOTO :SubmenuOti
+
+:SubmenuRede
+COLOR 0B
+CLS
+ECHO.
+ECHO ===========================================================================
+ECHO                           SUBMENU DE REDE
+ECHO ===========================================================================
+ECHO.
+ECHO    [1] Redefinicao do TCP/IP
+ECHO    [2] Redefinicao do Winsock
+ECHO    [3] Limpar Cache de DNS
+ECHO    [4] Liberar e renovar o IP
+ECHO    [5] Testar Conectividade (Ping 8.8.8.8)
+ECHO    [6] Exibir rotas de rede
+ECHO    [7] IPconfig
+ECHO.
+ECHO    [8] Voltar ao menu principal
+ECHO.
+ECHO ===========================================================================
+ECHO.
+CHOICE /C 12345678 /N 
+
+IF ERRORLEVEL 8 GOTO :MENU
+IF ERRORLEVEL 7 GOTO :IPCONFIG
+IF ERRORLEVEL 6 GOTO :ROTA
+IF ERRORLEVEL 5 GOTO :PING
+IF ERRORLEVEL 4 GOTO :IPRENEW
+IF ERRORLEVEL 3 GOTO :DNS
+IF ERRORLEVEL 2 GOTO :WINSOCK
+IF ERRORLEVEL 1 GOTO :TCPIP
+
+:IPRENEW
+CLS
+ECHO Liberando e renovando o IP.
+ipconfig /release
+ipconfig /renew
+ECHO  Concluido!
+PAUSE
+GOTO :SubmenuRede
+
+:TCPIP
+CLS
+ECHO Redefinindo o TCP/IP.
+netsh int ip reset
+ECHO  Concluido!
+PAUSE
+GOTO :SubmenuRede
+
+:WINSOCK
+CLS
+ECHO Redefinindo o Winsock.
+netsh winsock reset
+ECHO  Concluido!
+PAUSE
+GOTO :SubmenuRede
+
+:DNS
+CLS
+ECHO Limpando o cache de DNS.
+ipconfig /flushdns
+ECHO  Concluido!
+PAUSE
+GOTO :SubmenuRede
+
+:PING
+CLS
+ECHO Testando conectividade com o Google DNS (8.8.8.8).
+ping 8.8.8.8 -n 4
+ECHO  Concluido!
+PAUSE
+GOTO :SubmenuRede
+
+:ROTA
+CLS
+ECHO Exibindo rotas de rede.
+route print
+ECHO  Concluido!
+PAUSE
+GOTO :SubmenuRede
+
+:IPCONFIG
+CLS
+ECHO Exibindo informacoes de rede.
+ipconfig /all
+ECHO  Concluido!
+PAUSE
+GOTO :SubmenuRede
 
 :SubMenuPS
 COLOR 0B
@@ -224,14 +316,23 @@ ECHO                          SUBMENU DE IMPRESSAO
 ECHO ===========================================================================
 ECHO.
 ECHO   [1] Reiniciar o spooler de impressao
+ECHO   [2] Exibir status do spooler
+ECHO   [3] Listar impressoras instaladas
+ECHO   [4] Limpar fila de impressao
+ECHO   [5] Testar impressao (pagina de teste)
+ECHO   [6] Reinstalar drivers de impressora
 ECHO.
-ECHO   [2] Voltar ao menu principal
-ECHO.
+ECHO   [7] Voltar ao menu principal
 ECHO ===========================================================================
 ECHO.
 
-CHOICE /C 12 /N 
-IF ERRORLEVEL 2 GOTO MENU
+CHOICE /C 1234567 /N 
+IF ERRORLEVEL 7 GOTO MENU
+IF ERRORLEVEL 6 GOTO REINSTALARDRV
+IF ERRORLEVEL 5 GOTO TESTEIMP
+IF ERRORLEVEL 4 GOTO LIMPAFILA
+IF ERRORLEVEL 3 GOTO LISTAIMP
+IF ERRORLEVEL 2 GOTO STATUSPOOL
 IF ERRORLEVEL 1 GOTO SPOOLER
 
 :SPOOLER
@@ -243,18 +344,69 @@ ECHO Spooler reiniciado.
 PAUSE
 GOTO SubMenuImp
 
+:STATUSPOOL
+CLS
+ECHO Status do spooler de impressao:
+sc query spooler
+PAUSE
+GOTO SubMenuImp
+
+:LISTAIMP
+CLS
+ECHO Impressoras instaladas:
+wmic printer get name,default,status
+PAUSE
+GOTO SubMenuImp
+
+:LIMPAFILA
+CLS
+ECHO Limpando fila de impressao...
+net stop spooler
+timeout /t 2 >nul
+del /F /Q "%systemroot%\System32\spool\PRINTERS\*.*" >nul 2>&1
+net start spooler
+ECHO Fila de impressao limpa!
+PAUSE
+GOTO SubMenuImp
+
+:TESTEIMP
+CLS
+ECHO Impressoras instaladas:
+wmic printer get name
+ECHO.
+SET /P PRINTER="Digite o nome exato da impressora para teste: "
+IF NOT DEFINED PRINTER (
+    ECHO Nenhuma impressora informada.
+    PAUSE
+    GOTO SubMenuImp
+)
+ECHO Enviando pagina de teste para "%PRINTER%".
+rundll32 printui.dll,PrintUIEntry /k /n "%PRINTER%"
+ECHO Comando enviado.
+PAUSE
+GOTO SubMenuImp
+
+:REINSTALARDRV
+CLS
+ECHO Reinstalando drivers de impressora...
+ECHO.
+ECHO Este comando abre o assistente do Windows para reinstalacao manual.
+rundll32 printui.dll,PrintUIEntry /il
+ECHO.
+ECHO Quando terminar, feche a janela para retornar ao menu.
+PAUSE
+GOTO SubMenuImp
+
 :DESABILITARFAST
 CLS
 ECHO Desabilitando o Prefetch e Superfetch
 ECHO.
 ECHO Alterando registro do Prefetch.
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f
-
 ECHO.
 ECHO Desabilitando o SysMain.
 sc stop "SysMain"
 sc config "SysMain" start=disabled
-
 ECHO.
 ECHO Desabilitados!
 ECHO.
@@ -267,12 +419,10 @@ ECHO Desabilitando o Prefetch e Superfetch
 ECHO.
 ECHO Alterando registro do Prefetch.
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 0 /f
-
 ECHO.
 ECHO Desabilitando o SysMain.
 sc stop "SysMain"
 sc config "SysMain" start=disabled
-
 ECHO.
 ECHO Desabilitados!
 ECHO.
@@ -286,12 +436,10 @@ ECHO Habilitando o Prefetch e Superfetch.
 ECHO.
 ECHO Alterando o registro para habilitar Prefetch.
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" /v EnablePrefetcher /t REG_DWORD /d 3 /f
-
 ECHO.
 ECHO Configurando o servico SysMain (Superfetch) para automatico.
 sc config "SysMain" start=auto
 sc start "SysMain"
-
 ECHO.
 ECHO Habilitados!
 ECHO.
@@ -301,40 +449,21 @@ GOTO SubMenuPS
 
 :LIMPEZA
 CLS
-ECHO Iniciando limpeza de arquivos.
+ECHO Iniciando limpeza da pasta TEMP do AppData do usuario.
 ECHO.
 ECHO Feche o maximo de programas possivel para uma limpeza mais eficaz.
 PAUSE
 ECHO.
-ECHO Limpando arquivos e pastas temporarias do Usuario (%TEMP%).
-PUSHD %TEMP% 2>NUL
+ECHO Limpando arquivos e pastas temporarias do AppData do Usuario (%USERPROFILE%\AppData\Local\Temp).
+PUSHD "%USERPROFILE%\AppData\Local\Temp" 2>NUL
 IF ERRORLEVEL 1 (
-    ECHO   [AVISO] Nao foi possivel acessar a pasta %TEMP%.
+    ECHO   Nao foi possivel acessar %USERPROFILE%\AppData\Local\Temp.
 ) ELSE (
     DEL /F /S /Q *.* >NUL 2>&1
     FOR /D %%i IN (*.*) DO RMDIR /S /Q "%%i" >NUL 2>&1
     POPD
     ECHO   Concluido!
 )
-
-ECHO.
-ECHO Limpando arquivos e pastas temporarias do Sistema (C:\Windows\Temp).
-PUSHD C:\Windows\Temp 2>NUL
-IF ERRORLEVEL 1 (
-    ECHO   [AVISO] Nao foi possivel acessar C:\Windows\Temp.
-) ELSE (
-    DEL /F /S /Q *.* >NUL 2>&1
-    FOR /D %%i IN (*.*) DO RMDIR /S /Q "%%i" >NUL 2>&1
-    POPD
-    ECHO   Concluido!
-)
-
-ECHO.
-ECHO Limpando cache de DNS...
-ipconfig /flushdns
-ECHO.
-ECHO Concluido!
-ECHO Alguns arquivos podem estar sendo utilizados e portanto nao foram excluidos.
 ECHO.
 PAUSE
 GOTO :SubmenuOti
@@ -390,12 +519,11 @@ GOTO :EOF
 
 :TODASR
 CLS
-ECHO Iniciando a otimizacao completa.
+ECHO Iniciando a otimizacao completa com reparo de sistema.
 ECHO Este processo pode demorar. 
 PAUSE
 CALL :LIMPEZA
 CALL :DESABILITARFAST
-CALL :REDE
 CALL :LIMPDISCO
 CALL :DESEMPENHO
 CALL :ENERGIA
