@@ -34,8 +34,8 @@ ECHO  Selecione uma opcao para continuar:
 ECHO.
 ECHO    [1] SubMenu de Otimizacao
 ECHO    [2] SubMenu de Rede
-ECHO    [3] SubMenu Prefetch/Superfetch
-ECHO    [4] SubMenu de Impressao
+ECHO    [3] SubMenu de Impressao
+ECHO    [4] Gerenciador do Prefetch/Superfetch
 ECHO    [5] Exclusao de Perfis de Usuarios
 ECHO    [6] GPupdate
 ECHO.
@@ -61,11 +61,11 @@ CALL :SubmenuRede
 GOTO MENU
 
 :Op3
-CALL :SubMenuPS
+CALL :SubMenuImp
 GOTO MENU
 
 :Op4
-CALL :SubMenuImp
+CALL :SubMenuPS
 GOTO MENU
 
 :Op5
