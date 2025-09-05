@@ -1,17 +1,25 @@
 # Vertex - Assistente de Suporte
-Script que traz duas versões consigo, em Batch e em Powershell, para máxima compatibilidade com o Windows 10 e 11. O objetivo é otimizar e trazer segurança aos processos de otimização, troubleshooting, exclusão de perfis prejudicados, verificação e reparo do sistema, limpeza de disco e gerenciamento do Prefetch. 
 
-# Funcionalidades com detalhes
-O Vertex busca trazer uma ampla gama de funcionalidades para ajudar no dia a dia de um profissional de T.I, sendo elas:
+O Vertex oferece uma ampla gama de funcionalidades para troubleshooting no Windows 10 e 11, sendo adequado tanto para ambientes profissionais quanto para uso doméstico. Desenvolvido em batch, prioriza simplicidade, portabilidade e compatibilidade com diversos dispositivos, facilitando o suporte técnico de forma eficiente e acessível.
 
-Um submenu inteiramente voltado para otimização - possuindo limpeza de arquivos temporários e cache, verificação e reparo de arquivos do sistema, otimização de rede, limpeza de disco, plano de energia voltado ao desempenho e seleção do plano de desempenho;
+Todas as funcionalidades são acessíveis por menus interativos, facilitando o uso e tornando o processo de suporte técnico mais ágil e eficiente.
 
-Gerenciador do SuperFetch e PreFetch;
+## Funcionalidades com detalhes
 
-Submenu de impressão - permitindo a reinicialização do spooler;
+- **Submenu de Otimização:**  
+  Limpeza de arquivos temporários e cache, verificação e reparo de arquivos do sistema, otimização de rede, limpeza de disco, plano de energia voltado ao desempenho e seleção do plano de desempenho.
 
-Exclusão de perfis com uma ferramenta avançada e otimizada, utilizando WMIC;
+- **Gerenciador do SuperFetch e PreFetch:**  
+  Permite habilitar ou desabilitar facilmente esses recursos para melhorar a performance do Windows.
 
-E o GPUpdate para atualizar as políticas de grupo.
+- **Submenu de Impressão:**  
+  Reiniciar o spooler, exibir status do spooler, listar impressoras instaladas, limpar fila de impressão, testar impressão (página de teste) e reinstalar drivers de impressora.
 
-Além das funcionalidades listadas, a versão em PowerShell serve como uma alternativa modernizada, especialmente para sistemas onde o WMIC foi descontinuado.
+- **Exclusão de perfis de usuário:**  
+  Ferramenta avançada e otimizada, utilizando WMIC para remoção completa de perfis prejudicados.
+
+- **GPUpdate:**  
+  Atualização rápida das políticas de grupo do Windows.
+
+- **Submenu de Rede:**  
+  Redefinição de TCP/IP e Winsock, limpeza de cache DNS, liberação e renovação de IP, teste de conectividade, exibição de rotas de rede e informações detalhadas de IP.

@@ -34,7 +34,7 @@ ECHO.
 
 CHOICE /C 1234567 /N 
 
-IF ERRORLEVEL 7 GOTO Op7
+IF ERRORLEVEL 7 GOTO SAIR
 IF ERRORLEVEL 6 GOTO Op6
 IF ERRORLEVEL 5 GOTO Op5
 IF ERRORLEVEL 4 GOTO Op4
@@ -59,15 +59,12 @@ CALL :SubMenuImp
 GOTO MENU
 
 :Op5
-CALL:LimpaPerfil
+CALL :LimpaPerfil
 GOTO MENU
 
 :Op6
 CALL :GPUPDATE
 GOTO MENU
-
-:Op7
-GOTO SAIR
 
 :LimpaPerfil
 COLOR 0C
@@ -96,14 +93,14 @@ set /p userlist="Digite os nomes dos usuarios a serem removidos (separados por e
 
 if not defined userlist (
     echo Saindo.
-    goto :EOF
+    goto MENU
 )
 
 CLS
 echo.
-echo ----------------------------------------------------------
-echo Iniciando processo para os usuarios: %userlist%
-echo ----------------------------------------------------------
+echo ==========================================================
+echo   INICIANDO O PROCESSO PARA OS USUARIOS: %userlist%
+echo ==========================================================
 echo.
 
 for %%u in (%userlist%) do (
@@ -144,7 +141,7 @@ echo Processo finalizado.
 echo.
 echo Pressione qualquer tecla para voltar ao menu principal.
 pause >nul
-goto :EOF
+goto MENU
 
 :SubmenuOti
 COLOR 0B
@@ -169,33 +166,33 @@ ECHO ===========================================================================
 ECHO.
 CHOICE /C 12345678 /N 
 
-IF ERRORLEVEL 8 GOTO :MENU
-IF ERRORLEVEL 7 GOTO :TODAS
-IF ERRORLEVEL 6 GOTO :TODASR
-IF ERRORLEVEL 5 GOTO :DESEMPENHO
-IF ERRORLEVEL 4 GOTO :ENERGIA
-IF ERRORLEVEL 3 GOTO :LIMPDISCO
-IF ERRORLEVEL 2 GOTO :SISTEMA
-IF ERRORLEVEL 1 GOTO :LIMPEZA
+IF ERRORLEVEL 8 GOTO MENU
+IF ERRORLEVEL 7 GOTO TODAS
+IF ERRORLEVEL 6 GOTO TODASR
+IF ERRORLEVEL 5 GOTO DESEMPENHO
+IF ERRORLEVEL 4 GOTO ENERGIA
+IF ERRORLEVEL 3 GOTO LIMPDISCO
+IF ERRORLEVEL 2 GOTO SISTEMA
+IF ERRORLEVEL 1 GOTO LIMPEZA
 
 :DESEMPENHO
 CLS
 sysdm.cpl
 PAUSE
-GOTO :SubmenuOti
+GOTO SubmenuOti
 
 :ENERGIA
 CLS
 powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
 ECHO Concluido!
 PAUSE
-GOTO :SubmenuOti
+GOTO SubmenuOti
 
 :LIMPDISCO
 CLS
 cleanmgr /d C:
 PAUSE
-GOTO :SubmenuOti
+GOTO SubmenuOti
 
 :SubmenuRede
 COLOR 0B
@@ -219,14 +216,14 @@ ECHO ===========================================================================
 ECHO.
 CHOICE /C 12345678 /N 
 
-IF ERRORLEVEL 8 GOTO :MENU
-IF ERRORLEVEL 7 GOTO :IPCONFIG
-IF ERRORLEVEL 6 GOTO :ROTA
-IF ERRORLEVEL 5 GOTO :PING
-IF ERRORLEVEL 4 GOTO :IPRENEW
-IF ERRORLEVEL 3 GOTO :DNS
-IF ERRORLEVEL 2 GOTO :WINSOCK
-IF ERRORLEVEL 1 GOTO :TCPIP
+IF ERRORLEVEL 8 GOTO MENU
+IF ERRORLEVEL 7 GOTO IPCONFIG
+IF ERRORLEVEL 6 GOTO ROTA
+IF ERRORLEVEL 5 GOTO PING
+IF ERRORLEVEL 4 GOTO IPRENEW
+IF ERRORLEVEL 3 GOTO DNS
+IF ERRORLEVEL 2 GOTO WINSOCK
+IF ERRORLEVEL 1 GOTO TCPIP
 
 :IPRENEW
 CLS
@@ -235,7 +232,7 @@ ipconfig /release
 ipconfig /renew
 ECHO  Concluido!
 PAUSE
-GOTO :SubmenuRede
+GOTO SubmenuRede
 
 :TCPIP
 CLS
@@ -243,7 +240,7 @@ ECHO Redefinindo o TCP/IP.
 netsh int ip reset
 ECHO  Concluido!
 PAUSE
-GOTO :SubmenuRede
+GOTO SubmenuRede
 
 :WINSOCK
 CLS
@@ -251,7 +248,7 @@ ECHO Redefinindo o Winsock.
 netsh winsock reset
 ECHO  Concluido!
 PAUSE
-GOTO :SubmenuRede
+GOTO SubmenuRede
 
 :DNS
 CLS
@@ -259,7 +256,7 @@ ECHO Limpando o cache de DNS.
 ipconfig /flushdns
 ECHO  Concluido!
 PAUSE
-GOTO :SubmenuRede
+GOTO SubmenuRede
 
 :PING
 CLS
@@ -267,7 +264,7 @@ ECHO Testando conectividade com o Google DNS (8.8.8.8).
 ping 8.8.8.8 -n 4
 ECHO  Concluido!
 PAUSE
-GOTO :SubmenuRede
+GOTO SubmenuRede
 
 :ROTA
 CLS
@@ -275,7 +272,7 @@ ECHO Exibindo rotas de rede.
 route print
 ECHO  Concluido!
 PAUSE
-GOTO :SubmenuRede
+GOTO SubmenuRede
 
 :IPCONFIG
 CLS
@@ -283,7 +280,7 @@ ECHO Exibindo informacoes de rede.
 ipconfig /all
 ECHO  Concluido!
 PAUSE
-GOTO :SubmenuRede
+GOTO SubmenuRede
 
 :SubMenuPS
 COLOR 0B
@@ -411,7 +408,7 @@ ECHO.
 ECHO Desabilitados!
 ECHO.
 PAUSE
-GOTO :SubmenuOti
+GOTO SubmenuOti
 
 :DESABILITAR
 CLS
@@ -515,7 +512,7 @@ ECHO.
 ECHO Concluido!
 ECHO.
 PAUSE
-GOTO :EOF
+GOTO MENU
 
 :TODASR
 CLS
@@ -533,7 +530,7 @@ ECHO Otimizacao concluida!
 ECHO Reinicie seu computador para finalizar todas as alteracoes.
 ECHO.
 PAUSE
-GOTO :SubmenuOti
+GOTO SubmenuOti
 
 :TODAS
 CLS
@@ -551,7 +548,7 @@ ECHO Otimizacao concluida!
 ECHO Reinicie seu computador para finalizar todas as alteracoes.
 ECHO.
 PAUSE
-GOTO :SubmenuOti
+GOTO SubmenuOti
 
 :SAIR
 CLS
