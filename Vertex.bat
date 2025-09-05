@@ -3,6 +3,19 @@
 TITLE Assistente de Suporte
 CHCP 65001 > NUL
 setlocal enabledelayedexpansion
+COLOR 0C
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    CLS
+    echo ==========================================================
+    echo   Este script precisa ser executado como Administrador!
+    echo ==========================================================
+    echo.
+    echo Clique com o botao direito e escolha "Executar como administrador".
+    echo.
+    pause
+    exit
+)
 
 :MENU
 COLOR 0B
@@ -17,8 +30,6 @@ ECHO   ░░░█████░    ░███ ░   █ ░███    ░
 ECHO     ░░███      ██████████ █████   █████    █████    ██████████ █████ █████
 ECHO      ░░░      ░░░░░░░░░░ ░░░░░   ░░░░░    ░░░░░    ░░░░░░░░░░ ░░░░░ ░░░░░                                                                                                                                                                                                                                                                                      
 ECHO ===========================================================================
-ECHO  Recomenda-se executar como Administrador.
-ECHO.
 ECHO  Selecione uma opcao para continuar:
 ECHO.
 ECHO    [1] SubMenu de Otimizacao
@@ -29,8 +40,7 @@ ECHO    [5] Exclusao de Perfis de Usuarios
 ECHO    [6] GPupdate
 ECHO.
 ECHO    [7] Sair
-ECHO ============================================================================
-ECHO.
+ECHO ===========================================================================
 
 CHOICE /C 1234567 /N 
 
@@ -67,22 +77,10 @@ CALL :GPUPDATE
 GOTO MENU
 
 :LimpaPerfil
-COLOR 0C
 CLS
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    CLS
-    echo.
-    echo Este script precisa ser executado com privilegios de Administrador.
-    echo.
-    echo Pressione qualquer tecla para sair.
-    pause >nul
-    exit
-)
-
-echo.
+COLOR 0C
 echo ==========================================================
-echo        FERRAMENTA DE EXCLUSAO DE PERFIS DE USUARIO
+echo       FERRAMENTA DE EXCLUSAO DE PERFIS DE USUARIO
 echo ==========================================================
 echo.
 echo Para sair, simplesmente pressione Enter sem digitar nada.
@@ -454,6 +452,7 @@ ECHO.
 ECHO Limpando arquivos e pastas temporarias do AppData do Usuario (%USERPROFILE%\AppData\Local\Temp).
 PUSHD "%USERPROFILE%\AppData\Local\Temp" 2>NUL
 IF ERRORLEVEL 1 (
+    COLOR 0C
     ECHO   Nao foi possivel acessar %USERPROFILE%\AppData\Local\Temp.
 ) ELSE (
     DEL /F /S /Q *.* >NUL 2>&1
