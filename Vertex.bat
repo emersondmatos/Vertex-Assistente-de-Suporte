@@ -4,19 +4,6 @@ TITLE Assistente de Suporte
 CHCP 65001 > NUL
 setlocal enabledelayedexpansion
 COLOR 0C
-net session >nul 2>&1
-if %errorlevel% neq 0 (
-    CLS
-    echo ==========================================================
-    echo   Este script precisa ser executado como Administrador!
-    echo ==========================================================
-    echo.
-    echo Clique com o botao direito e escolha "Executar como administrador".
-    echo.
-    pause
-    exit
-)
-
 :MENU
 COLOR 0B
 CLS
@@ -77,13 +64,29 @@ CALL :GPUPDATE
 GOTO MENU
 
 :LimpaPerfil
+
+CLS
+COLOR 0C
+REM Verificar se está rodando como administrador
+net session >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ==========================================================
+    echo   Esta ferramenta precisa de privilegios de Administrador!
+    echo ==========================================================
+    echo.
+    echo Clique com o botao direito no script e escolha "Executar como administrador".
+    echo.
+    pause
+    goto MENU
+)
+
 CLS
 COLOR 0C
 echo ==========================================================
 echo       FERRAMENTA DE EXCLUSAO DE PERFIS DE USUARIO
 echo ==========================================================
 echo.
-echo Para sair, simplesmente pressione Enter sem digitar nada.
+echo Para sair, simplesmente pressione 'Enter' sem digitar nada.
 echo.
 
 set "userlist="
