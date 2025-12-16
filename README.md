@@ -1,8 +1,6 @@
 # Vertex - Assistente de Suporte
 
-O Vertex oferece uma ampla gama de funcionalidades para troubleshooting no Windows 10 e 11, sendo adequado tanto para ambientes profissionais quanto para uso doméstico. Desenvolvido em batch, prioriza simplicidade, portabilidade e compatibilidade com diversos dispositivos, facilitando o suporte técnico de forma eficiente e acessível.
-
-Todas as funcionalidades são acessíveis por menus interativos, facilitando o uso e tornando o processo de suporte técnico mais ágil e eficiente.
+O Vertex é uma solução de automação via terminal para Windows 10 e 11, pensada para simplificar o troubleshooting. Por ser desenvolvido em Batch, o script é leve e portátil. Com uma interface simples baseada em menus, ele permite executar rapidamente rotinas críticas, como destravar o spooler de impressão, reparar a rede ou limpar o sistema; facilitando a vida de quem presta suporte técnico.
 
 ## Funcionalidades com detalhes
 
